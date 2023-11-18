@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Pedido extends Model
 {
     use HasFactory;
+    protected $fillable = ['idCuenta', 'product', 'amount','value','total'];
 }
