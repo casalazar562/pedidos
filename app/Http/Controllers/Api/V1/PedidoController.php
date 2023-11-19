@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Contracts\Cuenta\CuentaRepositoryInterface;
+use App\Contracts\Cuenta\PedidoRepositoryInterface;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CuentaRequest;
+use App\Http\Requests\PedidoRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
-class CuentaController extends Controller
+class PedidoController extends Controller
 {
     protected $repository;
 
-    public function __construct(CuentaRepositoryInterface $repository)
+    public function __construct(PedidoRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
-    private function getCountParams(): array
+    private function getOrderParams(): array
     {
-        return request()->only('name', 'email', 'telephone');
+        return request()->only('idCuenta', 'product', 'amount', 'value', 'total');
     }
 
     public function all()
@@ -31,7 +31,7 @@ class CuentaController extends Controller
         if ($counts->isEmpty()) {
             return new JsonResponse([
                 'data' => $counts,
-                'message' => 'No hay cuentas'
+                'message' => 'No hay pedidos'
             ], Response::HTTP_NOT_FOUND);
         }
         return new JsonResponse([
@@ -39,16 +39,16 @@ class CuentaController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function create(CuentaRequest $request)
+    public function create(PedidoRequest $request)
     {
-        $data = $this->getCountParams();
+        $data = $this->getOrderParams();
         DB::beginTransaction();
         try {
             $count = $this->repository->create($data);
             DB::commit();
             return new JsonResponse([
                 'data' => $count,
-                'message' => 'Cuenta Agregada Correctamente'
+                'message' => 'Pedido Agregado Correctamente'
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             $response = [
@@ -56,7 +56,7 @@ class CuentaController extends Controller
                 'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ];
-            Log::error('LOG ERROR CREATE COUNT.', $response);
+            Log::error('LOG ERROR CREATE ORDER.', $response);
             DB::rollBack();
             return new JsonResponse([
                 'response' => $response
@@ -64,17 +64,17 @@ class CuentaController extends Controller
         }
     }
 
-    public function update(CuentaRequest $request, $id)
+    public function update(PedidoRequest $request, $id)
     {
         Log::info($request);
-        $data = $this->getCountParams();
+        $data = $this->getOrderParams();
         DB::beginTransaction();
         try {
             $count = $this->repository->update($data, $id);
             DB::commit();
             return new JsonResponse([
                 'data' => $count,
-                'message' => 'Cuenta Actualizada Correctamente.'
+                'message' => 'Pedido Actualizado Correctamente.'
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
             $response = [
@@ -82,7 +82,7 @@ class CuentaController extends Controller
                 'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ];
-            Log::error('LOG ERROR UPDATE COUNT.', $response);
+            Log::error('LOG ERROR UPDATE ORDER.', $response);
             DB::rollBack();
             return new JsonResponse([
                 'response' => $response
@@ -103,7 +103,7 @@ class CuentaController extends Controller
     {
         $this->repository->delete($id);
         return new JsonResponse([
-            'message' => 'Cuenta Eliminada Correctamente.'
+            'message' => 'Pedido Eliminado Correctamente.'
         ], Response::HTTP_OK);
     }
 }

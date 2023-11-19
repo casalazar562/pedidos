@@ -9,9 +9,6 @@ use Ramsey\Uuid\Type\Integer;
 
 class EloquentCuentaRepository implements CuentaRepositoryInterface
 {
-    protected $storageImage;
-    protected $findGame;
-
     public function __construct(private Cuenta $model)
     {
         $this->model = $model;
