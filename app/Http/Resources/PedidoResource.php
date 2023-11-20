@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PedidoResource extends JsonResource
@@ -21,7 +20,7 @@ class PedidoResource extends JsonResource
             'product' => $this->product,
             'amount' => $this->amount,
             'value' => $this->value,           
-            'total' => $this->total,           
+            'total' => $this->total,              
         ];
     }
 }

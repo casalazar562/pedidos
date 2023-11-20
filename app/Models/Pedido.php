@@ -10,4 +10,9 @@ class Pedido extends Model
     use HasFactory;
     protected $primaryKey = 'idPedido';
     protected $fillable = ['idCuenta', 'product', 'amount','value','total'];
+
+    public function cuenta()
+    {
+        return $this->belongsTo(Cuenta::class, 'idCuenta', 'idCuenta');
+    }
 }

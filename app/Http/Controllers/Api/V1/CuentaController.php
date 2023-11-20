@@ -6,9 +6,10 @@ use App\Contracts\Cuenta\CuentaRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CuentaRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{
+    DB,
+    Log
+};
 use Symfony\Component\HttpFoundation\Response;
 
 class CuentaController extends Controller
@@ -25,6 +26,11 @@ class CuentaController extends Controller
         return request()->only('name', 'email', 'telephone');
     }
 
+    /**
+     * Retrieve all Cuenta (count) counts and return a JsonResponse.
+     *
+     * @return JsonResponse
+     */
     public function all()
     {
         $counts = $this->repository->list();
@@ -39,6 +45,12 @@ class CuentaController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * Create a new Cuenta (count) using the provided data.
+     *
+     * @param CuentaRequest $request
+     * @return JsonResponse
+     */
     public function create(CuentaRequest $request)
     {
         $data = $this->getCountParams();
@@ -64,6 +76,13 @@ class CuentaController extends Controller
         }
     }
 
+    /**
+     * Update a Cuenta (Order) count on the provided request and order ID.
+     *
+     * @param CuentaRequest $request
+     * @param int $id
+     * @return JsonResponse
+     */
     public function update(CuentaRequest $request, $id)
     {
         Log::info($request);
@@ -90,6 +109,12 @@ class CuentaController extends Controller
         }
     }
 
+    /**
+     * Find a Cuenta (count) by its ID and return a JsonResponse.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     public function find($id)
     {
         $count = $this->repository->find($id);
@@ -98,7 +123,12 @@ class CuentaController extends Controller
         ], Response::HTTP_OK);
     }
 
-
+    /**
+     * Delete a Cuenta (count) by its ID and return a JsonResponse.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     public function delete($id)
     {
         $this->repository->delete($id);
